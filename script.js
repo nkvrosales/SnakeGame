@@ -17,6 +17,89 @@ let gameLoop = null;
 let gameSpeed = INITIAL_SPEED;
 let isGameRunning = false;
 
+// Audio Context for Sound Effects
+let audioContext = null;
+let isSoundEnabled = true;
+
+// Initialize Audio Context (must be called after user interaction)
+function initAudio() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+}
+
+// Play a tone with given frequency, duration, and type
+function playTone(frequency, duration, type = 'sine', volume = 0.3) {
+    if (!audioContext || !isSoundEnabled) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = frequency;
+    oscillator.type = type;
+
+    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + duration);
+}
+
+// Sound: Eat Food (happy ascending notes)
+function playEatSound() {
+    if (!audioContext) return;
+    playTone(523.25, 0.1, 'sine', 0.2); // C5
+    setTimeout(() => playTone(659.25, 0.1, 'sine', 0.2), 50); // E5
+    setTimeout(() => playTone(783.99, 0.15, 'sine', 0.25), 100); // G5
+}
+
+// Sound: Game Over (sad descending notes)
+function playGameOverSound() {
+    if (!audioContext) return;
+    playTone(392, 0.2, 'sawtooth', 0.15); // G4
+    setTimeout(() => playTone(349.23, 0.2, 'sawtooth', 0.12), 150); // F4
+    setTimeout(() => playTone(293.66, 0.3, 'sawtooth', 0.1), 300); // D4
+    setTimeout(() => playTone(261.63, 0.4, 'sawtooth', 0.08), 500); // C4
+}
+
+// Sound: Button Click (soft click)
+function playClickSound() {
+    if (!audioContext) return;
+    playTone(800, 0.05, 'sine', 0.1);
+}
+
+// Sound: Start Game (energetic)
+function playStartSound() {
+    if (!audioContext) return;
+    playTone(261.63, 0.1, 'square', 0.1); // C4
+    setTimeout(() => playTone(329.63, 0.1, 'square', 0.1), 80); // E4
+    setTimeout(() => playTone(392, 0.1, 'square', 0.1), 160); // G4
+    setTimeout(() => playTone(523.25, 0.2, 'square', 0.15), 240); // C5
+}
+
+// Sound: Celebration (happy melody)
+function playCelebrationSound() {
+    if (!audioContext) return;
+    const melody = [523.25, 587.33, 659.25, 783.99, 659.25, 783.99, 1046.50];
+    melody.forEach((freq, i) => {
+        setTimeout(() => playTone(freq, 0.15, 'sine', 0.2), i * 120);
+    });
+}
+
+// Sound: No Button (funny wobble)
+function playNoSound() {
+    if (!audioContext) return;
+    playTone(200, 0.1, 'sawtooth', 0.1);
+    setTimeout(() => playTone(180, 0.1, 'sawtooth', 0.08), 100);
+    setTimeout(() => playTone(160, 0.15, 'sawtooth', 0.06), 200);
+}
+
 // DOM Elements
 const scoreDisplay = document.getElementById('score');
 const highScoreDisplay = document.getElementById('highScore');
@@ -204,6 +287,10 @@ function drawIdleMessage() {
 
 // Start Game
 function startGame() {
+    // Initialize audio on first user interaction
+    initAudio();
+    playStartSound();
+
     // Reset game state
     snake = [
         { x: 10, y: 10 },
@@ -266,6 +353,7 @@ function gameUpdate() {
         score += 10;
         scoreDisplay.textContent = score;
         spawnFood();
+        playEatSound(); // Play eating sound
 
         // Increase speed
         if (gameSpeed > MIN_SPEED) {
@@ -461,6 +549,7 @@ function handleKeyPress(e) {
 function gameOver() {
     clearInterval(gameLoop);
     isGameRunning = false;
+    playGameOverSound(); // Play game over sound
 
     // Update high score
     if (score > highScore) {
@@ -479,6 +568,8 @@ function gameOver() {
 
 // Handle Yes Button
 function handleYes() {
+    playClickSound();
+    playCelebrationSound(); // Play celebration melody
     valentineModal.classList.remove('show');
     celebrationModal.classList.add('show');
     createConfetti();
@@ -488,6 +579,7 @@ function handleYes() {
 let noClickCount = 0;
 function handleNo() {
     noClickCount++;
+    playNoSound(); // Play funny wobble sound
 
     // Make the no button run away or shrink
     if (noClickCount >= 3) {
