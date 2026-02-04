@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game - For My Love 💕</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="hearts-bg"></div>
+
+        <header>
+            <h1>🐍 Snake Game 💕</h1>
+            <p class="subtitle">A special game for you, <span class="highlight">Lara</span></p>
+        </header>
+
+        <div class="game-container">
+            <div class="score-board">
+                <div class="score">
+                    <span class="label">Score</span>
+                    <span class="value" id="score">0</span>
+                </div>
+                <div class="high-score">
+                    <span class="label">Best</span>
+                    <span class="value" id="highScore">0</span>
+                </div>
+            </div>
+
+            <canvas id="gameCanvas"></canvas>
+
+            <!-- Mobile D-Pad Controls -->
+            <div class="mobile-controls" id="mobileControls">
+                <div class="dpad">
+                    <button class="dpad-btn up" data-direction="up">▲</button>
+                    <div class="dpad-row">
+                        <button class="dpad-btn left" data-direction="left">◀</button>
+                        <div class="dpad-center">💕</div>
+                        <button class="dpad-btn right" data-direction="right">▶</button>
+                    </div>
+                    <button class="dpad-btn down" data-direction="down">▼</button>
+                </div>
+            </div>
+
+            <div class="controls-info">
+                <p class="desktop-hint">Use <strong>Arrow Keys</strong> or <strong>WASD</strong> to move</p>
+                <p class="mobile-hint">Use the <strong>D-Pad</strong> or <strong>Swipe</strong> to move</p>
+                <button id="startBtn" class="start-btn">Start Game 💖</button>
+            </div>
+        </div>
+
+        <!-- Valentine Modal -->
+        <div id="valentineModal" class="modal">
+            <div class="modal-content">
+                <div class="hearts-animation">
+                    <span>💕</span><span>💖</span><span>💗</span><span>💓</span><span>💝</span>
+                </div>
+                <h2 class="modal-title">Game Over!</h2>
+                <p class="final-score">Your Score: <span id="finalScore">0</span> 🌟</p>
+
+                <div class="valentine-message">
+                    <h3>My Dearest <span class="name-highlight">Lara</span>,</h3>
+                    <p class="love-text">
+                        <span class="asawa">Asawa ko,</span> you are the most precious person in my life.
+                        Every moment with you feels like a beautiful dream I never want to wake up from.
+                    </p>
+                    <p class="love-text">
+                        <span class="my-love">My love,</span> you make my heart skip a beat every single day.
+                        You are my sunshine, my happiness, and my everything.
+                    </p>
+                    <div class="proposal">
+                        <p class="question">Will You Be My Valentine? 💝</p>
+                        <div class="buttons">
+                            <button id="yesBtn" class="answer-btn yes-btn">Yes! 💖</button>
+                            <button id="noBtn" class="answer-btn no-btn">No</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="playAgainBtn" class="play-again-btn">Play Again 🎮</button>
+            </div>
+        </div>
+
+        <!-- Celebration Modal -->
+        <div id="celebrationModal" class="modal celebration">
+            <div class="modal-content celebration-content">
+                <div class="confetti"></div>
+                <h2 class="celebration-title">🎉 YESSS! 🎉</h2>
+                <div class="celebration-hearts">
+                    <span>💕</span><span>💖</span><span>💗</span><span>💓</span><span>💝</span>
+                    <span>❤️</span><span>💘</span><span>💞</span><span>💟</span><span>❣️</span>
+                </div>
+                <p class="celebration-text">
+                    <span class="asawa">Asawa ko,</span> you just made me the happiest person alive!
+                </p>
+                <p class="celebration-text">
+                    I love you so much, <span class="name-highlight">Lara!</span> 💕
+                </p>
+                <p class="celebration-text my-love">
+                    My love, this is the beginning of our beautiful forever! 💝
+                </p>
+                <button id="closeBtn" class="close-celebration-btn">I Love You Too! 💖</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
